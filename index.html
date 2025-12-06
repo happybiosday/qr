@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QR Code Generator</title>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f5f5f5;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+    }
+
+    h2 {
+        font-size: 2em;
+        text-align: center;
+    }
+
+    input {
+        width: 90%;
+        max-width: 400px;
+        padding: 15px;
+        font-size: 18px;
+        border: 2px solid #333;
+        border-radius: 8px;
+        outline: none;
+        margin-top: 10px;
+    }
+
+    button {
+        width: 90%;
+        max-width: 400px;
+        padding: 15px;
+        font-size: 18px;
+        margin-top: 10px;
+        border: none;
+        border-radius: 8px;
+        background: #333;
+        color: white;
+        cursor: pointer;
+    }
+
+    #qrBox {
+        margin-top: 20px;
+        display: none;
+        padding: 20px;
+        background: white;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+    }
+
+    #qrBox img, #qrBox canvas {
+        width: 100%;
+        max-width: 300px;
+        height: auto;
+    }
+</style>
+</head>
+
+<body>
+
+<h2>QR Code Generator</h2>
+
+<input id="textInput" placeholder="Enter text or URL">
+
+<button onclick="previewQR()">Preview</button>
+<button onclick="downloadQR()">Download</button>
+
+<div id="qrBox"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<script>
+let qr = null;
+
+function previewQR() {
+    const box = document.getElementById("qrBox");
+    const text = document.getElementById("textInput").value;
+
+    if (!text.trim()) return;
+
+    box.style.display = "block";
+    box.innerHTML = ""; // Clear previous QR
+
+    qr = new QRCode(box, {
+        text: text,
+        width: 300,
+        height: 300,
+        correctLevel: QRCode.CorrectLevel.H
+    });
+}
+
+function downloadQR() {
+    const box = document.getElementById("qrBox");
+    if (box.style.display === "none") return;
+
+    const img = box.querySelector("img") || box.querySelector("canvas");
+    if (!img) return;
+
+    const link = document.createElement("a");
+    link.download = "qr_code.png";
+    link.href = img.src ? img.src : img.toDataURL("image/png");
+    link.click();
+}
+</script>
+
+</body>
+</html>
